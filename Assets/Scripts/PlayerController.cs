@@ -11,14 +11,17 @@ public class PlayerController : MonoBehaviour
     private float movementX;
     private float movementY;
     private int count;
+    private int lives;
     public Text countText;
     public Text winText;
+    public Text livesText;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         count = 0;
+        lives = 3;
         SetCountText();
         winText.text = "";
     }
@@ -45,15 +48,35 @@ public class PlayerController : MonoBehaviour
             other.gameObject.SetActive (false);
             count = count + 1;
             SetCountText();
+            
+        }
+
+        if (other.gameObject.CompareTag("Enemy"))
+        {
+            other.gameObject.SetActive (false);
+            lives = lives - 1;
+            SetCountText();
         }
     }
 
     void SetCountText()
     {
         countText.text = "Count: " + count.ToString ();
-        if (count >= 6)
+        livesText.text = "Lives: " + lives.ToString ();
+        if (count == 6)
+        {
+            transform.position = new Vector3(60f, 0.5f, -30f);
+        }
+        
+        if (count >= 14)
         {
             winText.text = "You Win! Game created by Casey Temple";
+        }
+
+        if (lives <= 0)
+        {
+            winText.text = "You Lost.";
+            gameObject.SetActive (false);
         }
     }
 }
